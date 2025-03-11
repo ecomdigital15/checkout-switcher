@@ -88,10 +88,14 @@ export default async function productCreator(
 
   try {
     for (let i = 0; i < count; i++) {
-      await client.request(CREATE_PRODUCTS_MUTATION, {
-        variables: {
-          input: {
-            title: `${randomTitle()}`,
+      await client.query({
+        data: {
+          query: CREATE_PRODUCTS_MUTATION,
+          variables: {
+            input: {
+              title: `${randomTitle()}`,
+              variants: [{ price: randomPrice() }],
+            },
           },
         },
       });
@@ -111,4 +115,8 @@ function randomTitle() {
   const adjective = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
   const noun = NOUNS[Math.floor(Math.random() * NOUNS.length)];
   return `${adjective} ${noun}`;
+}
+
+function randomPrice() {
+  return Math.round((Math.random() * 10 + Number.EPSILON) * 100) / 100;
 }

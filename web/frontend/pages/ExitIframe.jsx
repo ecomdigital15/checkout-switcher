@@ -1,14 +1,11 @@
-import { useAppBridge } from "@shopify/app-bridge-react";
-import { useEffect, useState } from "react";
+import { Redirect } from "@shopify/app-bridge/actions";
+import { useAppBridge, Loading } from "@shopify/app-bridge-react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Banner, Layout, Page } from "@shopify/polaris";
 
 export default function ExitIframe() {
   const app = useAppBridge();
   const { search } = useLocation();
-  const [showWarning, setShowWarning] = useState(false);
-
-  app.loading(true);
 
   useEffect(() => {
     if (!!app && !!search) {
@@ -16,28 +13,15 @@ export default function ExitIframe() {
       const redirectUri = params.get("redirectUri");
       const url = new URL(decodeURIComponent(redirectUri));
 
-      if (
-        [location.hostname, "admin.shopify.com"].includes(url.hostname) ||
-        url.hostname.endsWith(".myshopify.com")
-      ) {
-        window.open(url, "_top");
-      } else {
-        setShowWarning(true);
+      if (url.hostname === location.hostname) {
+        const redirect = Redirect.create(app);
+        redirect.dispatch(
+          Redirect.Action.REMOTE,
+          decodeURIComponent(redirectUri)
+        );
       }
     }
-  }, [app, search, setShowWarning]);
+  }, [app, search]);
 
-  return showWarning ? (
-    <Page narrowWidth>
-      <Layout>
-        <Layout.Section>
-          <div style={{ marginTop: "100px" }}>
-            <Banner title="Redirecting outside of Shopify" status="warning">
-              Apps can only use /exitiframe to reach Shopify or the app itself.
-            </Banner>
-          </div>
-        </Layout.Section>
-      </Layout>
-    </Page>
-  ) : null;
+  return <Loading />;
 }

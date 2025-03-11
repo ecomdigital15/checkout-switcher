@@ -1,0 +1,82 @@
+# Learn more about configuring your checkout UI extension:
+# https://shopify.dev/api/checkout-extensions/checkout/configuration
+
+# The version of APIs your extension will receive. Learn more:
+# https://shopify.dev/docs/api/usage/versioning
+api_version = "2024-10"
+
+[[extensions]]
+name = "Checkout switcher subs block"
+handle = "checkout-switcher-subs-block"
+type = "ui_extension"
+
+
+# Controls where in Shopify your extension will be injected,
+# and the file that contains your extension’s source code. Learn more:
+# https://shopify.dev/docs/api/checkout-ui-extensions/unstable/extension-targets-overview
+
+[[extensions.targeting]]
+module = "./src/Checkout.jsx"
+target = "purchase.checkout.cart-line-item.render-after"
+
+[extensions.capabilities]
+# Gives your extension access to directly query Shopify’s storefront API.
+# https://shopify.dev/docs/api/checkout-ui-extensions/unstable/configuration#api-access
+api_access = true
+
+# Gives your extension access to make external network calls, using the
+# JavaScript `fetch()` API. Learn more:
+# https://shopify.dev/docs/api/checkout-ui-extensions/unstable/configuration#network-access
+# network_access = true
+
+# Loads metafields on checkout resources, including the cart,
+# products, customers, and more. Learn more:
+# https://shopify.dev/docs/api/checkout-ui-extensions/unstable/configuration#metafields
+
+# [[extensions.metafields]]
+# namespace = "my_namespace"
+# key = "my_key"
+# [[extensions.metafields]]
+# namespace = "my_namespace"
+# key = "my_other_key"
+
+# Defines settings that will be collected from merchants installing
+# your extension. Learn more:
+# https://shopify.dev/docs/api/checkout-ui-extensions/unstable/configuration#settings-definition
+
+ [extensions.settings]
+# [[extensions.settings.fields]]
+# key = "banner_title"
+# type = "single_line_text_field"
+# name = "Banner title"
+# description = "Enter a title for the banner"
+
+ [[extensions.settings.fields]]
+   key = "subscription_text"
+   type = "single_line_text_field"
+   name = "Upgrade button label"
+   description = "Define a custom text for the upgrade button."
+
+   [[extensions.settings.fields]]
+   key = "subscription_link_text"
+   type = "single_line_text_field"
+   name = "Adjust selection label"
+   description = "Define a custom text that allows the user to adjust the subscription product."
+   
+   [[extensions.settings.fields]]
+   key = "quantity_selector"
+   type = "boolean"
+   name = "Display quantity selector"
+   description = "True enables customers to change the quantity of the product."
+
+   [[extensions.settings.fields]]
+   key = "remove_button"
+   type = "boolean"
+   name = "Allow product removal"
+   description = "True enables customers to remove the product from the checkout."
+
+   [[extensions.settings.fields]]
+   key = "modify_button"
+   type = "boolean"
+   name = "Activate adjust button for all subscription products"
+   description = "True shows the Adjust button on all subscription products. False shows it only for upgraded subscription products."
